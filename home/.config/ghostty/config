@@ -9,7 +9,7 @@ shell-integration = fish
 quit-after-last-window-closed = true
 
 # Font family
-font-family = GeistMono
+font-family= GeistMono
 font-style = Regular
 font-style-italic = Regular Italic
 font-style-bold = Bold

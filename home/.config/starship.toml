@@ -10,8 +10,8 @@ format = "$directory${custom.scm}$all"
 disabled = true
 
 [character]
-error_symbol = "[󰘧](bold red)"
-success_symbol = "[󰘧](bold green)"
+success_symbol = "[ ](bold fg:green)"
+error_symbol = "[ ](bold fg:red)"
 
 [directory]
 truncate_to_repo = false
@@ -56,4 +56,3 @@ detect_folders = ["node_modules"]
 
 [package]
 disabled = true
-
