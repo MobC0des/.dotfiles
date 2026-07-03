@@ -676,6 +676,42 @@ cmd_update() {
     fi
 }
 
+cmd_sync() {
+    print_header "Syncing dotfiles"
+
+    cd "$DOTFILES_DIR" || return 1
+
+    # Check for anything to commit
+    if git diff --quiet && git diff --cached --quiet && [ -z "$(git ls-files --others --exclude-standard)" ]; then
+        print_info "Nothing to commit, working tree clean"
+    else
+        # Show what's changing
+        print_info "Staging all changes..."
+        git add -A
+
+        # Prompt for commit message
+        local default_msg="chore: update dotfiles $(date '+%Y-%m-%d')"
+        read -r -p "Commit message [${default_msg}]: " msg
+        msg="${msg:-$default_msg}"
+
+        if git commit -m "$msg"; then
+            print_success "Changes committed"
+        else
+            print_error "Commit failed"
+            return 1
+        fi
+    fi
+
+    # Push
+    print_info "Pushing to remote..."
+    if git push; then
+        print_success "Dotfiles synced to remote"
+    else
+        print_error "Push failed"
+        return 1
+    fi
+}
+
 cmd_doctor() {
     print_header "Running diagnostics"
     
@@ -937,6 +973,7 @@ complete -c dot -f
 # Commands
 complete -c dot -n "__fish_use_subcommand" -a "init" -d "Initialize and install dotfiles"
 complete -c dot -n "__fish_use_subcommand" -a "update" -d "Update dotfiles, packages, and pi"
+complete -c dot -n "__fish_use_subcommand" -a "sync" -d "Commit and push dotfile changes to remote"
 complete -c dot -n "__fish_use_subcommand" -a "doctor" -d "Run diagnostics and check installation"
 complete -c dot -n "__fish_use_subcommand" -a "package" -d "Package management commands"
 complete -c dot -n "__fish_use_subcommand" -a "check-packages" -d "Check which packages are installed/missing"
@@ -2049,6 +2086,9 @@ main() {
             ;;
         edit)
             cmd_edit "$@"
+            ;;
+        sync)
+            cmd_sync "$@"
             ;;
         help)
             cmd_help
