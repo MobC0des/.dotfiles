@@ -1,0 +1,3 @@
+# Work-specific packages for Blend
+# Install with: brew bundle --file=./packages/bundle.work
+# Note: HubSpot CLI (@hubspot/cli) is managed via npm-globals.fish

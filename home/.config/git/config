@@ -49,5 +49,5 @@
 	name = "HakariC0des"
 	signingKey = "~/.ssh/id_rsa.pub"
 
-[includeIf "gitdir:~/Code/work/"]
+[includeIf "gitdir:~/Sites/"]
 	path = "~/.config/git/work_config"

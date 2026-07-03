@@ -23,7 +23,7 @@ return {
 			{ "j-hui/fidget.nvim" },
 		},
 		config = function()
-			local map_lsp_keybinds = require("hakaricodes.keymaps").map_lsp_keybinds
+			local map_lsp_keybinds = require("scottbrown.keymaps").map_lsp_keybinds
 
 			-- List your LSP servers here.
 			local servers = {

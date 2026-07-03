@@ -1,5 +1,5 @@
 local twoslash = require("twoslash-queries")
-local prelude = require("hakaricodes.prelude")
+local prelude = require("scottbrown.prelude")
 local copy_line_diagnostics_to_clipboard = prelude.copy_line_diagnostics_to_clipboard
 local open_link = prelude.open_link
 

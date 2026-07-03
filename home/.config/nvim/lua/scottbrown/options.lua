@@ -101,7 +101,7 @@ local treesitter_indent_disabled_filetypes = {
 	["ocaml.interface"] = true,
 }
 
-local treesitter_group = vim.api.nvim_create_augroup("hakaricodes-treesitter-main", { clear = true })
+local treesitter_group = vim.api.nvim_create_augroup("scottbrown-treesitter-main", { clear = true })
 
 vim.api.nvim_create_autocmd("FileType", {
 	group = treesitter_group,
