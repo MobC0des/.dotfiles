@@ -52,15 +52,6 @@ return {
 				oxlint = {
 					root_markers = { ".oxlintrc.json" },
 				},
-				ocamllsp = {
-					manual_install = true,
-					cmd = { "dune", "exec", "ocamllsp" },
-					settings = {
-						codelens = { enable = true },
-						inlayHints = { enable = true },
-						syntaxDocumentation = { enable = true },
-					},
-				},
 				sqls = {},
 				tailwindcss = {
 					filetypes = { "typescriptreact", "javascriptreact", "html", "svelte", "astro" },
@@ -89,7 +80,7 @@ return {
 				stylua = {},
 			}
 
-			local manually_installed_servers = { "ocamllsp" }
+			local manually_installed_servers = {}
 			local mason_tools_to_install = vim.tbl_keys(vim.tbl_deep_extend("force", {}, servers, formatters))
 			local ensure_installed = vim.tbl_filter(function(name)
 				return not vim.tbl_contains(manually_installed_servers, name)
