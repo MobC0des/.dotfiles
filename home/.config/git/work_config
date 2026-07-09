@@ -1,4 +1,4 @@
 [user]
 	email = "scott.brown@blendb2b.com"
 	name = "Scott Brown"
-	signingkey = "~/.ssh/key.pub"
+	signingkey = "~/.ssh/id_rsa.pub"
