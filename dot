@@ -1958,6 +1958,7 @@ cmd_help() {
     echo -e "${BOLD}COMMANDS:${RESET}"
     echo "    init                Initialize and install dotfiles"
     echo "    update              Update dotfiles, packages, and pi"
+    echo "    sync                Commit and push dotfile changes to remote"
     echo "    doctor              Run diagnostics and check installation"
     echo "    package             Package management commands (add, remove, list)"
     echo "    check-packages      Check which packages are installed/missing"
