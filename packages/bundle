@@ -2,7 +2,7 @@
 # Note: require_sha disabled to prevent installation failures
 cask_args appdir: "/Applications"
 
-tap "HakariC0des/tap"
+tap "GabimaruC0des/tap"
 
 brew "ast-grep"
 brew "btop"

@@ -46,7 +46,7 @@
 
 [user]
 	email = "yami@00.codes"
-	name = "HakariC0des"
+	name = "GabimaruC0des"
 	signingKey = "~/.ssh/id_rsa.pub"
 
 [includeIf "gitdir:~/Sites/"]
