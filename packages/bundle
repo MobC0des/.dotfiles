@@ -45,5 +45,4 @@ cask "orbstack"
 cask "raycast"
 cask "slack"
 cask "yaak@beta"
-
 cask "zed"
