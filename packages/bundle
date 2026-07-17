@@ -39,6 +39,7 @@ brew "wget"
 brew "zoxide"
 
 cask "discord"
+cask "font-geist-mono"
 cask "ghostty"
 cask "obs"
 cask "orbstack"

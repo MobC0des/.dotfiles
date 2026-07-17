@@ -22,7 +22,6 @@ readonly PACKAGES_DIR="${DOTFILES_DIR}/packages"
 readonly HOME_DIR="${DOTFILES_DIR}/home"
 readonly GITHUB_EMAIL="dillon.mulroy@gmail.com"
 readonly GITHUB_KEY_PATH="${HOME}/.ssh/key.pub"
-readonly FONT_REPO_URL="git@github.com:dmmulroy/mono-lisa.git"
 
 # Progress indicators
 CURRENT_STEP=0
@@ -122,7 +121,7 @@ TOOL_REGISTRY=(
     "Vite+             ;; vp   ;; curl -fsSL https://vite.plus | bash           ;; true  ;; -         ;; true"
     "pi                ;; pi   ;; vp install -g @mariozechner/pi-coding-agent   ;; true  ;; -         ;; true"
     "SSH key           ;; -    ;; fn:_generate_ssh_key                          ;; false ;; SKIP_SSH  ;; false"
-    "MonoLisa font     ;; -    ;; fn:_install_font                              ;; false ;; SKIP_FONT ;; false"
+    "Geist Mono font    ;; -    ;; fn:_install_font                              ;; false ;; SKIP_FONT ;; false"
     "Fish shell        ;; -    ;; fn:_setup_fish_shell                          ;; false ;; -         ;; false"
 )
 
@@ -381,44 +380,12 @@ _generate_ssh_key() {
 }
 
 _install_font() {
-
-    if [[ ! -f "$GITHUB_KEY_PATH" ]]; then
-        print_warning "GitHub SSH key not found. Skipping font installation"
-        return 0
-    fi
-
-    if ! confirm "Have you added the SSH key to your GitHub account?" "n"; then
-        print_warning "Skipping font installation"
-        return 0
-    fi
-
-    local font_temp_dir
-    font_temp_dir=$(mktemp -d)
-    local font_install_dir="${HOME}/Library/Fonts"
-
-    print_info "Cloning font repository..."
-    if GIT_SSH_COMMAND="ssh -i '$GITHUB_KEY_PATH' -o IdentitiesOnly=yes" git clone "$FONT_REPO_URL" "$font_temp_dir"; then
-        print_success "Repository cloned successfully"
-
-        mkdir -p "$font_install_dir"
-        print_info "Installing font files..."
-
-        local font_count=0
-        while IFS= read -r -d '' font_file; do
-            cp "$font_file" "$font_install_dir/"
-            ((++font_count))
-        done < <(find "$font_temp_dir" -type f \( -name '*.otf' -o -name '*.ttf' \) -print0)
-
-        if [[ $font_count -gt 0 ]]; then
-            print_success "Installed $font_count font files"
-        else
-            print_warning "No font files found in repository"
-        fi
+    print_info "Installing Geist Mono font via Homebrew..."
+    if brew install --cask font-geist-mono 2>/dev/null; then
+        print_success "Geist Mono font installed"
     else
-        print_error "Failed to clone font repository"
+        print_warning "Geist Mono font may already be installed or installation failed"
     fi
-
-    rm -rf "$font_temp_dir"
 }
 
 cmd_gen_ssh_key() {
