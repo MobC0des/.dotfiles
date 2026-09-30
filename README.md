@@ -81,7 +81,6 @@ dot
 │   │   ├── fish/       # Fish shell configuration
 │   │   ├── git/        # Git configuration
 │   │   ├── nvim/       # Neovim configuration
-│   │   ├── tmux/       # Tmux configuration
 │   │   └── ...
 │   └── .ideavimrc      # IntelliJ IDEA Vim configuration
 ├── packages/
@@ -484,14 +483,6 @@ which loads the personal namespace:
 
 ```lua
 require("mobc0des")
-```
-
-### Tmux
-
-Tmux configuration is managed alongside the rest of the environment under:
-
-```text
-home/.config/tmux/
 ```
 
 ## Architecture
