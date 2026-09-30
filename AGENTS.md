@@ -29,19 +29,19 @@ macOS dev env via GNU Stow. Fish + Neovim + Tmux + Git + pi.
 
 ## WHERE TO LOOK
 
-| Task | Location |
-|------|----------|
-| Add package | `dot package add <name>` or edit `packages/bundle` |
-| Shell alias/abbr | `home/.config/fish/conf.d/aliases.fish` |
-| Shell function | `home/.config/fish/functions/` |
-| Git alias | `home/.config/git/config` [alias] section |
-| Neovim plugin | `home/.config/nvim/lua/plugins/<name>.lua` |
-| Neovim keymap | `home/.config/nvim/lua/dmmulroy/keymaps.lua` |
-| Tmux binding | `home/.config/tmux/tmux.conf` |
-| Starship prompt | `home/.config/starship.toml` |
-| Pi extension | `home/.pi/agent/extensions/<name>/` |
-| Pi skill | `home/.pi/agent/skills/<name>/SKILL.md` |
-| Pi settings | `home/.pi/agent/settings.json` |
+| Task              | Location                                                   |
+| ----------------- | ---------------------------------------------------------- |
+| Add package       | `dot package add <name>` or edit `packages/bundle`         |
+| Shell alias/abbr  | `home/.config/fish/conf.d/aliases.fish`                    |
+| Shell function    | `home/.config/fish/functions/`                             |
+| Git alias         | `home/.config/git/config` [alias] section                  |
+| Neovim plugin     | `home/.config/nvim/lua/plugins/<name>.lua`                 |
+| Neovim keymap     | `home/.config/nvim/lua/dmmulroy/keymaps.lua`               |
+| Tmux binding      | `home/.config/tmux/tmux.conf`                              |
+| Starship prompt   | `home/.config/starship.toml`                               |
+| Pi extension      | `home/.pi/agent/extensions/<name>/`                        |
+| Pi skill          | `home/.pi/agent/skills/<name>/SKILL.md`                    |
+| Pi settings       | `home/.pi/agent/settings.json`                             |
 | Work git identity | Auto via `home/.config/git/work_config` for `~/Code/work/` |
 
 ## CONVENTIONS
@@ -76,14 +76,14 @@ dot gen-ssh-key       # Generate ed25519 key by email domain
 
 ## KEY CONFIGS
 
-| Tool | Entry | Notes |
-|------|-------|-------|
-| Fish | `config.fish` | Sources `conf.d/`, sets EDITOR/MANPAGER |
-| Neovim | `init.lua` | 1 line: `require("dmmulroy")` |
-| Tmux | `tmux.conf` | Prefix `C-;`, auto-installs TPM |
-| Git | `config` | SSH signing, `pull.rebase`, conditional include |
-| Starship | `starship.toml` | 2s timeout (Vite+ shims), custom.scm after dir |
-| Pi | `settings.json` | Default provider: opencode.cloudflare.dev, Catppuccin theme |
+| Tool     | Entry           | Notes                                                       |
+| -------- | --------------- | ----------------------------------------------------------- |
+| Fish     | `config.fish`   | Sources `conf.d/`, sets EDITOR/MANPAGER                     |
+| Neovim   | `init.lua`      | 1 line: `require("dmmulroy")`                               |
+| Tmux     | `tmux.conf`     | Prefix `C-;`, auto-installs TPM                             |
+| Git      | `config`        | SSH signing, `pull.rebase`, conditional include             |
+| Starship | `starship.toml` | 2s timeout (Vite+ shims), custom.scm after dir              |
+| Pi       | `settings.json` | Default provider: opencode.cloudflare.dev, Catppuccin theme |
 
 ## UNIQUE STYLES
 

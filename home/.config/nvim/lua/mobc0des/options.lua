@@ -64,7 +64,7 @@ vim.opt.clipboard = "unnamed,unnamedplus"
 vim.opt.cursorline = true
 
 -- Set fold settings
--- These options were reccommended by nvim-ufo
+-- These options are recommended by nvim-ufo
 -- See: https://github.com/kevinhwang91/nvim-ufo#minimal-configuration
 vim.opt.foldcolumn = "0"
 vim.opt.foldenable = true
@@ -80,51 +80,33 @@ vim.opt.scrolloff = 8
 vim.opt.colorcolumn = "80"
 
 vim.opt.guicursor = {
-	"n-v-c:block", -- Normal, visual, command-line: block cursor
-	"i-ci-ve:ver25", -- Insert, command-line insert, visual-exclude: vertical bar cursor with 25% width
-	"r-cr:hor20", -- Replace, command-line replace: horizontal bar cursor with 20% height
-	"o:hor50", -- Operator-pending: horizontal bar cursor with 50% height
-	"a:blinkwait700-blinkoff400-blinkon250", -- All modes: blinking settings
-	"sm:block-blinkwait175-blinkoff150-blinkon175", -- Showmatch: block cursor with specific blinking settings
+  "n-v-c:block",                                  -- Normal, visual, command-line: block cursor
+  "i-ci-ve:ver25",                                -- Insert, command-line insert, visual-exclude: vertical bar cursor with 25% width
+  "r-cr:hor20",                                   -- Replace, command-line replace: horizontal bar cursor with 20% height
+  "o:hor50",                                      -- Operator-pending: horizontal bar cursor with 50% height
+  "a:blinkwait700-blinkoff400-blinkon250",        -- All modes: blinking settings
+  "sm:block-blinkwait175-blinkoff150-blinkon175", -- Showmatch: block cursor with specific blinking settings
 }
 
--- Enable virtual lines for diagnostics
--- vim.diagnostic.config({
--- 	float = { border = "rounded" },
--- 	virtual_text = true,
--- 	-- virtual_text = { current_line = true },
--- 	virtual_lines = false,
--- })
-
-local treesitter_indent_disabled_filetypes = {
-	ocaml = true,
-	["ocaml.interface"] = true,
-}
-
-local treesitter_group = vim.api.nvim_create_augroup("scottbrown-treesitter-main", { clear = true })
+local treesitter_group = vim.api.nvim_create_augroup("mobc0des-treesitter-main", { clear = true })
 
 vim.api.nvim_create_autocmd("FileType", {
-	group = treesitter_group,
-	callback = function(args)
-		pcall(vim.treesitter.start, args.buf)
+  group = treesitter_group,
+  callback = function(args)
+    pcall(vim.treesitter.start, args.buf)
 
-		local filetype = vim.bo[args.buf].filetype
-		if treesitter_indent_disabled_filetypes[filetype] then
-			return
-		end
+    if not vim.treesitter.get_parser(args.buf, nil, { error = false }) then
+      return
+    end
 
-		if not vim.treesitter.get_parser(args.buf, nil, { error = false }) then
-			return
-		end
+    local language = vim.treesitter.language.get_lang(filetype)
+    if not language then
+      return
+    end
 
-		local language = vim.treesitter.language.get_lang(filetype)
-		if not language then
-			return
-		end
-
-		local has_indents, query = pcall(vim.treesitter.query.get, language, "indents")
-		if has_indents and query then
-			vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-		end
-	end,
+    local has_indents, query = pcall(vim.treesitter.query.get, language, "indents")
+    if has_indents and query then
+      vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+    end
+  end,
 })
