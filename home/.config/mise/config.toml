@@ -1,0 +1,5 @@
+[settings]
+activate_shims = false
+
+[tools]
+node = "26.10.0"

@@ -1,8 +1,0 @@
-require("mobc0des.options")
-require("mobc0des.lazy")
-require("mobc0des.keymaps")
-require("mobc0des.highlight_yank")
-require("mobc0des.vertical_help")
-require("mobc0des.copy_file_path_to_clipboard")
-require("mobc0des.set_file_type")
-require("mobc0des.set_column_width")
