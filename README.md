@@ -1,791 +1,279 @@
 # Dotfiles
 
-My personal macOS development environment, managed with a custom `dot` CLI, GNU Stow, and Homebrew.
+My macOS development setup.
 
-This repository originally started from Dillon Mulroy's dotfiles and has since diverged into my own setup.
+This repo started from Dillon Mulroy's dotfiles, but I've stripped a lot of that back and turned it into my own setup.
 
-## Overview
+The main goal now is simple: keep the environment small, make ownership clear, and only keep tools I actually use and understand.
 
-This repository contains the configuration and tooling I use to set up and maintain my development environment.
+## How it works
 
-The main idea is:
+Anything inside:
 
 ```text
-~/.dotfiles/home/... → GNU Stow → ~/...
+~/.dotfiles/home
 ```
 
-The files inside `~/.dotfiles/home` are the source of truth.
-
-GNU Stow creates the corresponding symlinks in my home directory.
+is managed with GNU Stow and linked into my home directory.
 
 For example:
 
 ```text
-~/.dotfiles/home/.config/nvim
+~/.dotfiles/home/.config/helix
         ↓
       Stow
         ↓
-~/.config/nvim
+~/.config/helix
 ```
 
-Structural configuration changes should be made inside this repository and then applied with:
+If I change structural config, I make the change in this repo and then run:
 
 ```bash
 dot stow
 ```
 
-The repository also contains a `dot` CLI for installation, package management, diagnostics, updates, and other maintenance tasks.
+The repo also contains my `dot` CLI, which handles setup, package management, diagnostics and general maintenance.
 
-## Key Features
+## Setup
 
-- GNU Stow for managing configuration symlinks
-- Homebrew for package and application installation
-- Custom `dot` CLI for setup and maintenance
-- Fish as the interactive shell
-- Neovim as the primary editor
-- Git and jj-aware tooling
-- Separate base and work package configuration
-- Environment diagnostics through `dot doctor`
-- AI tooling integrated into the development environment
-
-## Quick Start
-
-```bash
-# Clone the repository
-git clone https://github.com/MobC0des/.dotfiles.git ~/.dotfiles
-cd ~/.dotfiles
-
-# Full setup
-./dot init
-
-# Or skip optional SSH/font setup
-./dot init --skip-ssh --skip-font
-```
-
-After installation, the `dot` command is available for ongoing management.
-
-Running it without arguments shows the available commands:
-
-```bash
-dot
-```
-
-## Repository Structure
+The current setup looks like this:
 
 ```text
-~/.dotfiles/
-├── dot                 # Main CLI
-├── AGENTS.md           # Repository guidance for AI/coding agents
-├── home/               # Configuration source files, stowed into ~
-│   ├── .config/
-│   │   ├── fish/       # Fish shell configuration
-│   │   ├── git/        # Git configuration
-│   │   ├── nvim/       # Neovim configuration
-│   │   └── ...
-│   └── .ideavimrc      # IntelliJ IDEA Vim configuration
-├── packages/
-│   ├── bundle          # Base Brewfile
-│   └── bundle.work     # Work-specific packages
-└── README.md
+macOS
+├── Homebrew      → machine-level apps + CLI tools
+├── GNU Stow      → config placement
+├── Fish          → shell
+├── mise          → runtime versions
+├── direnv        → project env activation
+├── Ghostty       → terminal
+├── Zed           → main editor
+├── Helix         → terminal editor / $EDITOR
+├── Git           → version control
+├── OrbStack      → containers/Linux
+└── AI
+    ├── ChatGPT   → reasoning, investigation, architecture, review
+    ├── Pi        → implementation
+    └── Claude    → implementation
 ```
 
-## Configuration Ownership
+The main thing I care about is that each tool has one job.
 
-The `home/` directory is the source of truth for configuration managed by Stow.
+I don't want multiple tools trying to manage the same thing.
 
-For example, Neovim lives here:
+## Runtime management
+
+mise owns my runtimes.
+
+My default Node version is:
+
+```toml
+[settings]
+activate_shims = false
+
+[tools]
+node = "26.10.0"
+```
+
+Projects can override that with their own `mise.toml`.
+
+For example:
+
+```toml
+[tools]
+node = "26.5.0"
+```
+
+So the model is:
 
 ```text
-~/.dotfiles/home/.config/nvim
+default runtime      → mise
+project runtime      → mise.toml
+project dependencies → project package manager
 ```
 
-and is exposed to Neovim here:
+## Global JS tools
+
+Global JavaScript CLIs live in:
 
 ```text
-~/.config/nvim
+~/.npm-global
 ```
 
-through symlinks created by GNU Stow.
+That currently includes things like:
 
-This matters when making structural changes.
+- pnpm
+- Pi
+- Claude Code
+- HubSpot CLI
+- Prettier
+- ccusage
+- TypeScript
+- language servers
 
-For normal edits to an existing symlinked file, editing through either path ultimately changes the source file.
+These are tools I want available globally.
 
-For adding, deleting, renaming, or moving configuration files, make the change inside `.dotfiles` and then run:
+Project dependencies still belong to the project.
 
-```bash
-dot stow
-```
+## Editors
 
-This avoids creating unmanaged files inside `~/.config`.
+### Zed
 
-## Neovim
+Zed is my main editor for project work.
 
-The Neovim configuration is Lua-based and managed with `lazy.nvim`.
+### Helix
 
-Its personal configuration namespace is:
+Helix is my terminal editor and is also used for:
 
 ```text
-lua/mobc0des/
+$EDITOR
+$VISUAL
 ```
 
-The setup is primarily focused on TypeScript and JavaScript development.
+It uses Catppuccin Macchiato and formats JavaScript/TypeScript through Prettier.
 
-Core parts of the editor include:
+## Fish
 
-- Neovim LSP
-- Mason
-- `typescript-tools.nvim`
-- Blink completion
-- LuaSnip
-- Conform formatting
-- Treesitter
-- Telescope
-- Oil
-- UFO folding
-- WhichKey
-- Catppuccin Macchiato
-- JJ/Git-aware VCS tooling
+Fish is intentionally small now.
 
-More detailed Neovim-specific documentation lives in:
+It mainly handles:
 
-```text
-home/.config/nvim/AGENTS.md
-```
+- environment variables
+- mise activation
+- Starship
+- Homebrew
+- Bun
+- OrbStack
+- PATH setup
+- zoxide
+- Catppuccin shell config
 
-## The `dot` CLI
+It does not install packages or try to manage project tooling.
 
-The `dot` command manages installation and maintenance of the environment.
+## Theme
 
-## Installation
+I use Catppuccin Macchiato across the setup.
 
-### `dot init`
+That includes:
 
-Runs the initial environment setup.
-
-```bash
-dot init
-```
-
-Optional flags:
-
-```bash
-# Skip SSH key generation
-dot init --skip-ssh
-
-# Skip font installation
-dot init --skip-font
-
-# Skip both
-dot init --skip-ssh --skip-font
-```
-
-The setup process includes:
-
-1. Installing Homebrew if required
-2. Installing packages from the Brewfiles
-3. Creating configuration symlinks with GNU Stow
-4. Installing the Bun runtime
-5. Installing pi through the Vite+ tool registry
-6. Optionally generating an SSH key for GitHub
-7. Optionally installing the configured font
-8. Setting up Fish and its plugins
-
-## Maintenance
-
-### `dot update`
-
-Updates the development environment.
-
-```bash
-dot update
-```
-
-This includes:
-
-- pulling the latest dotfiles changes
-- detecting whether the repository is using jj or Git
-- updating Homebrew packages
-- re-stowing configuration files
-- updating pi and its configured packages
-- running the configured pi skill synchronization
-
-### `dot doctor`
-
-Runs environment diagnostics.
-
-```bash
-dot doctor
-```
-
-Checks include:
-
-- Homebrew installation
-- essential development tools
-- pi and development tooling
-- Fish configuration
-- PATH configuration
-- broken symlinks
-- missing dependencies
-
-### `dot check-packages`
-
-Shows the installation status of packages declared in the Brewfiles.
-
-```bash
-dot check-packages
-```
-
-### `dot retry-failed`
-
-Retries packages that failed during installation.
-
-```bash
-dot retry-failed
-```
-
-## Fish Shell Benchmarking
-
-### `dot benchmark-shell`
-
-Benchmarks Fish startup performance.
-
-```bash
-# Run 10 benchmarks
-dot benchmark-shell
-
-# Run a custom number of benchmarks
-dot benchmark-shell -r 20
-
-# Show individual timings
-dot benchmark-shell -v
-
-# Combine options
-dot benchmark-shell -r 15 -v
-```
-
-The benchmark includes:
-
-- high-precision timing
-- average startup time
-- fastest and slowest runs
-- timing range
-- basic performance assessment
-- profiling guidance when startup is slow
-
-Example:
-
-```text
-=> Fish Shell Startup Benchmark Results
-
-Configuration:
-  Shell: fish
-  Runs: 10
-  Test: Empty script execution
-
-Performance Results:
-  Average time: 0.061 seconds
-  Fastest time: 0.048 seconds
-  Slowest time: 0.078 seconds
-  Time range:   0.030 seconds
-
-Performance Assessment:
-✓ Good startup performance
-```
-
-## Utility Commands
-
-### `dot completions`
-
-Generates Fish completions for the `dot` CLI.
-
-```bash
-dot completions
-```
-
-The generated completions include:
-
-- commands and subcommands
-- command options
-- package names where relevant
-
-### `dot edit`
-
-Opens the dotfiles repository using `$EDITOR`.
-
-```bash
-dot edit
-```
-
-### `dot stow`
-
-Re-applies configuration symlinks.
-
-```bash
-dot stow
-```
-
-This uses GNU Stow to map files from:
-
-```text
-~/.dotfiles/home/
-```
-
-into:
-
-```text
-~/
-```
-
-Run it after structural changes such as:
-
-- adding a configuration file
-- deleting a configuration file
-- renaming a configuration file
-- moving configuration directories
-
-### `dot link`
-
-Makes the `dot` command globally available.
-
-```bash
-dot link
-```
-
-### `dot unlink`
-
-Removes the global `dot` command link.
-
-```bash
-dot unlink
-```
-
-## Package Management
-
-Package management uses two Brewfiles:
-
-```text
-packages/bundle
-packages/bundle.work
-```
-
-The base bundle contains packages used across machines, while the work bundle contains additional work-specific tooling.
-
-### Listing Packages
-
-```bash
-dot package list
-dot package list base
-dot package list work
-```
-
-### Adding Packages
-
-```bash
-# Add a formula to the base bundle
-dot package add git
-
-# Add a cask to the base bundle
-dot package add docker cask
-
-# Add a formula to the work bundle
-dot package add kubectl brew work
-```
-
-### Updating Packages
-
-```bash
-# Update all installed packages
-dot package update
-
-# Update one package
-dot package update git
-
-# Update the base bundle
-dot package update all base
-
-# Update the work bundle
-dot package update all work
-```
-
-### Removing Packages
-
-```bash
-# Remove a package
-dot package remove git
-
-# Remove a package specifically from the base bundle
-dot package remove docker base
-```
-
-## Package Files
-
-### `packages/bundle`
-
-Contains the base development environment.
-
-This includes tools such as:
-
-- Neovim
+- Ghostty
 - Fish
-- Git
-- ripgrep
-- fd
-- fzf
-- development applications
-- CLI tooling
+- Starship
+- Helix
+- bat
+- Pi
 
-### `packages/bundle.work`
+For bat:
 
-Contains tooling needed specifically for work environments.
+```fish
+set -gx BAT_THEME "Catppuccin Macchiato"
+```
 
-This can include things such as:
+## Homebrew
 
-- cloud tooling
-- Kubernetes tooling
-- enterprise development utilities
+Homebrew owns machine-level tools and apps.
 
-## Configuration Areas
+The bundle is deliberately small.
 
-### Fish
-
-Fish configuration contains shell setup, functions, environment configuration, and plugin management.
+Current CLI tools include:
 
 ```text
-home/.config/fish/
+bat
+btop
+direnv
+fd
+fish
+fzf
+gh
+helix
+herdr
+jq
+ripgrep
+shellcheck
+starship
+stow
+zoxide
 ```
 
-### Git
-
-Git configuration lives under:
+Apps include:
 
 ```text
-home/.config/git/
+Ghostty
+OrbStack
+Raycast
+Zed
+Geist Mono
 ```
 
-It includes personal Git settings as well as conditional configuration where required.
-
-### Neovim
-
-Neovim configuration lives under:
-
-```text
-home/.config/nvim/
-```
-
-The entry point is:
-
-```text
-home/.config/nvim/init.lua
-```
-
-which loads the personal namespace:
-
-```lua
-require("mobc0des")
-```
-
-## Architecture
-
-### GNU Stow
-
-GNU Stow manages the relationship between repository files and files visible from the home directory.
-
-The repository contains:
-
-```text
-home/.config/nvim/init.lua
-```
-
-while Neovim sees:
-
-```text
-~/.config/nvim/init.lua
-```
-
-This allows configuration to remain version-controlled without copying files manually into the home directory.
-
-### Modular Configuration
-
-Each major tool owns its own configuration area.
+Project package managers still depend on the project.
 
 For example:
 
 ```text
-home/.config/fish/
-home/.config/git/
-home/.config/nvim/
-home/.config/tmux/
+package-lock.json → npm
+bun.lock          → Bun
+pnpm-lock.yaml    → pnpm
 ```
 
-This keeps shell, editor, version-control, and terminal configuration separate.
+## Git
 
-### Git and jj
+Git uses Helix as the editor:
 
-Some tooling detects whether a project is using Git or jj and behaves appropriately.
-
-The Neovim statusline and repository tooling also support a JJ-first workflow with Git fallback where appropriate.
-
-## Environment Setup
-
-### Prerequisites
-
-- macOS
-- internet connection
-- terminal access
-
-Both Intel and Apple Silicon Macs are supported by the setup.
-
-## First-Time Setup
-
-Clone the repository:
-
-```bash
-git clone https://github.com/MobC0des/.dotfiles.git ~/.dotfiles
-cd ~/.dotfiles
+```gitconfig
+[core]
+    editor = "hx"
 ```
 
-Run the installer:
+My personal Git identity is the default.
 
-```bash
-./dot init
-```
-
-Restart the terminal or reload Fish:
-
-```bash
-source ~/.config/fish/config.fish
-```
-
-Then verify the environment:
-
-```bash
-dot doctor
-```
-
-## Customisation
-
-### Adding Packages
-
-The preferred way to add packages is through the `dot` CLI.
-
-```bash
-dot package add new-tool
-dot package add new-app cask
-dot package add work-tool brew work
-```
-
-Packages can also be added manually by editing:
+Anything under:
 
 ```text
-packages/bundle
+~/Sites/
 ```
 
-or:
+uses my Blend work identity through `includeIf`.
+
+## Pi skills
+
+Pi config, themes and extensions can live in the dotfiles.
+
+Reusable skills do not.
+
+Those are installed separately into:
 
 ```text
-packages/bundle.work
+~/.pi/agent/skills
 ```
 
-For example:
+That keeps skill syncing separate from the dotfiles repo.
 
-```ruby
-brew "new-tool"
-cask "new-app"
-```
+Work-specific skills are also kept separate.
 
-Then apply the installation:
+## Making changes
 
-```bash
-dot init
-```
-
-or use Homebrew directly:
-
-```bash
-brew bundle --file=./packages/bundle
-```
-
-## Modifying Configuration
-
-For normal configuration changes:
-
-1. Edit the relevant file under `home/`
-2. Test the change
-3. Commit it to the repository
-
-For structural changes:
-
-1. Add, remove, rename, or move the file under `home/`
-2. Run:
-
-   ```bash
-   dot stow
-   ```
-
-3. Verify the corresponding file or symlink under `~/`
-4. Test the application using that configuration
-
-The repository should remain the source of truth rather than `~/.config`.
-
-## Troubleshooting
-
-### `dot` Command Not Found
-
-Reload Fish:
-
-```bash
-source ~/.config/fish/config.fish
-```
-
-Or temporarily add the repository to the path:
-
-```bash
-export PATH="$HOME/.dotfiles:$PATH"
-```
-
-### Package Installation Failures
-
-Check the package state:
-
-```bash
-dot check-packages
-```
-
-Retry failed packages:
-
-```bash
-dot retry-failed
-```
-
-### Broken or Incorrect Symlinks
-
-Run diagnostics:
-
-```bash
-dot doctor
-```
-
-Then re-apply Stow:
+For config changes:
 
 ```bash
 dot stow
 ```
 
-If Stow reports a conflict, check whether a real unmanaged file exists at the target path before deleting or replacing anything.
+Then I verify the thing I actually changed.
 
-The source file inside `.dotfiles/home` should remain the source of truth.
-
-### pi Installation
-
-Ensure Vite+ is installed:
+Examples:
 
 ```bash
-curl -fsSL https://vite.plus | bash
+which node
+mise current
+echo $BAT_THEME
+git config user.email
 ```
 
-Then install pi:
+## Philosophy
 
-```bash
-vp install -g @mariozechner/pi-coding-agent
-```
+Keep it small.
 
-## Getting Help
+Keep ownership clear.
 
-Show the general `dot` help:
+Don't add tools just because they look useful.
 
-```bash
-dot help
-```
-
-Show help for a specific command:
-
-```bash
-dot <command> --help
-```
-
-Run environment diagnostics:
-
-```bash
-dot doctor
-```
-
-Failed package logs are stored under files matching:
-
-```text
-packages/failed_packages_*.txt
-```
-
-## Testing Changes
-
-After modifying configuration, verify the relevant tool rather than assuming the configuration is correct.
-
-Useful repository-level checks include:
-
-```bash
-dot doctor
-dot check-packages
-```
-
-For structural configuration changes:
-
-```bash
-dot stow
-```
-
-For Neovim changes, restart Neovim and verify the affected behaviour directly.
-
-Examples include:
-
-- LSP attachment
-- completion
-- formatting
-- Telescope
-- Oil
-- folding
-- keymaps
-- diagnostics
-
-## Selective Installation
-
-Optional parts of setup can be skipped:
-
-```bash
-dot init --skip-ssh --skip-font
-```
-
-Check what remains missing:
-
-```bash
-dot check-packages
-```
-
-Work packages can also be installed separately:
-
-```bash
-brew bundle --file=./packages/bundle.work
-```
-
-## Shell Completions
-
-Generate Fish completions with:
-
-```bash
-dot completions
-```
-
-The completions include commands, options, and package names where supported.
-
-## License
-
-This repository is primarily for my personal use.
-
-Feel free to use it as inspiration or adapt parts of it for your own environment.
-
-## Acknowledgments
-
-- [Dillon Mulroy](https://github.com/dmmulroy), whose dotfiles were the original starting point for this repository
-- [GNU Stow](https://www.gnu.org/software/stow/) for symlink management
-- [Homebrew](https://brew.sh/) for package management
-- pi for AI-assisted development tooling
-- The wider dotfiles community for ideas and inspiration
+If something does not have a clear job, or another tool already owns that job, it probably does not belong here.
